@@ -1,0 +1,464 @@
+Base principal: componentes
+
+Utiliza: Typescript (superset de JS) - tudo que o js tem e funcionalidades adicionais (ex: tipagem forte - no js é tipagem dinâmica)
+    TS foi produzido pela Microsoft
+    Esse código é compilado para JS (o browser não conhece ts)
+    Outros exemplos de funcionalidades: Decorators (muito utilizado pelo Angular), interfaces - Orientação a objetos (e não funções)
+
+Google tenta lançar duas versões major por ano - major.minor.patch (utiliza a nomenclatura semântica de versões)
+    Evolução de versões normalmente a cada 2 anos
+
+Uso forte de CLI para o desenvolvimento
+    instalar: npm i -g @angular/cli
+    criar nova app: ng new nome-app
+
+O projeto consiste de um código JS compilado do TS, CSS e "um" HTML (a index) - os conteúdos são manipulações de DOM com JS por baixo dos panos
+
+Fundamentos de componentes (serve para React, Vue, Flutter, embora com implementação diferentes): Árvore de componentes  
+    A aplicação começa a partir dum componente principal (appComponent) - e você tem outros componentes referenciados por 
+    este para preenche-lo 
+
+    Exemplo:
+                                            MyApp(appComponent)
+                        |                                                   |
+                      Header                                              Content
+                        |                                              |              |
+                       Nav                                        ContentFile    ProductCrud
+                        |                                                             |
+                       List                                                      ProductForm
+                  |           |                                                |              |
+                Item        Item                                           Input            Button
+
+Representação, somente - não necessariamente é necessario criar um componente Input dentro do formulário, mas sim usar 
+dentro do próprio formulário o input tipagem
+Essa granularidade é alterada conforme necessidade
+
+Embora o projeto Angular dependa da árvore de componentes, a aplicação é, na verdade, modularizada - criar módulos com 
+determinados componentes, garantindo um maior encapsulamento e componentes que não podem ser usados fora de determinadas 
+situações limitado pela visibilidade/uso do módulo a qual pertence (para coisas que não possam ser usadas no sistema inteiro etc)
+Essa existência de módulos como uma encapsulamento a mais está presente somente no Angular
+
+Fluxo de Inicialicação da aplicação
+    main.ts
+        Chama AppModule (módulo para inicializar a aplicação)
+            Dentro do AppModule há um atributo Bootstrap que aponta para
+            AppComponent - chama toda a árvore de componentes
+Também é a partir dele que chamamos os componentes do Material (AppHeader, AppFooter,AppContent, etc)
+
+main.ts
+    |
+AppModule
+    |Bootstrap              -componentes
+AppComponente  - componente -componente
+          |   |  - componente
+          |  -  componente  
+          |  -  componente
+
+Componente: um trecho de código que representa algo visual, uma parte, da tela
+    Formado por html (), css (estilo) e ts (comportamento) - e, portanto, 3 arquivos para cada componente (no mínimo)
+        Anteriormente esses 3 atendiam à aplicação inteira, agora eles atendem ao componente
+    Gera uma tag personalizada para ser usada - encapsula as 3 tecnologias da web num único código (visual) 
+    O componente necessita de pelo menos um arquivo ts, este referencia os outros
+
+    @Component({
+        selector   ---------- 
+        templateURL - HTML
+        styleURls [estilos]
+    }) //No curso será utilizado o inline template
+
+Organização em módulos  
+    Depende da modularidade e necessidade do projeto (Pode ser 1 ou mais)
+    Possível escolher se o componente de determinado módulo estará visível fora do mesmo/para outros módulos 
+    ou apenas para o próprio
+        Um componente referenciado apenas por outro componente do mesmo módulo é vísivel somente àquele módulo
+        Normalmente é o padrão, para que o mesmo fique vísivel é necessário exportar o componente
+
+Anatomia dum Módulo - ele é composto por 5 atributos:                   
+    Declarations:  Declarar tudo que faz parte do módulo - principalmente os componentes
+        Components:
+        Diretivas:
+        Pipes: 
+    Exports: Todos as partes que serão visíveis para outros módulos
+        Components:
+        DIretivas:
+        Pipes
+    Imports: Importar outros módulos (A exemplo, os componentes do material)
+        Module A
+        Module B
+        Module C
+    Providers: Declarar os serviços
+        Service A 
+        Service B
+    Bootstrap: Onde se define o componente que será carregado no módulo - limitado ao módulo inicial da aplicação (appComponent)
+                É ele que inicia a aplicação	
+        AppComponent
+
+            A 
+        |   |   |
+        B   C   D
+O componente A é o único que precisa importar os outros módulos, já que necessita deles - os B,C e D precisam exportar os 
+componentes que serão vísiveis ao A/outros
+
+
+Decorator - na verdade vem do TS
+    @Nome - a classe passa a ser esse decorator
+        O decorator insere tags na classe
+        
+
+    @Component - a classe passa a se tornar um componente quando esse decorator é utilizado
+        insere tags:
+            selector: nome a ser referenciado nos outros componentes/páginas  em tag(<app-nome></app-nome>)
+            templateURL
+            styleURls
+    Decorator é um padrão de projeto com o objetivo de evitar heranças para estender objetos, trabalhando invés disso com composição
+
+    ----Elementos dentro do Angular----
+Componentes
+    <app-nome></app-nome>
+    Formado por html, css e ts - único obrigado a ter é o .ts (com um template html dentro)
+    Componentes são auto-contidos: um estilo genérico aplicado no css de um componente não altera o resto da aplicação
+
+
+Diretivas
+    Tem dois tipos: de atributo e estrutural
+        Atributo: foca em alterar a aparência e alterar o comportamento de um elemento, componente ou outra diretiva
+            -Aparência: Altera CSS
+            -Comportamento(ex): colocar uma diretiva dentro de determinado botão e o mesmo realiza uma chamada ao backend (ajax)
+            
+            ex de diretiva:
+                    @Directive({ //Decorator
+                        selector:'[appRed]' //tag como será no html
+                    })
+                    export class RedDirective{
+                        constructor(el:ElementRef){ //passa um elemento de referência do html
+                            el.nativeElement.style.color = '#e35e6b' //o que ele faz
+                        }
+                    }
+
+            Na html do elemento é adicionado o appRed - exemplo html:
+                <i class = "material-icons v-middle" appRed>
+
+        Estrutural: altera o layout adicionando ou removendo elementos da DOM
+            ex:
+            <form *ngIf='product' //Ou não mostra o elemento na DOM ou mostra conforme a condição e estilo
+                    class = 'product-form'
+            </form>
+
+            <ul> //Somente preenche se tiver produtos e quantos tiverem
+                <li *ngFor='let product of products'>
+                    {{product.name}}
+                </li>
+            </ul>
+
+Property Binding - Binding de Atributo - sintaxes dos colchetes
+    Pensar no componente como uma pequena aplicação: é necessária a comunicação entre o html e o TS
+    <table [dataSource] = 'products' > </table>
+    .ts - products = Products[]
+
+    Agora a table terá em lista os produtos do ts
+        Se estivesse escrito dataSource invés de [dataSource], o html encararia como uma string (dataSource) e nada aplicaria
+        - o colchetes adiciona funcionalidade a tag para que procure dentro do .ts um valor para aquele atributo
+
+Event Binding - sintaxe dos parenteses
+    <button mat-raised-button
+        (click) ='createProduct()'
+        color = 'primary'>
+        Salvar
+    </button>
+    
+    .ts:
+        createProduct():void{....}
+        
+One Way Data Binding - Unidirecional
+    Forma padrão do property binding - utiliza os colchetes -> <tag [atributoPersonalizado/Materials] = 'varName'
+
+    <input [value] = 'nome'
+    nome:string
+
+    Se a variável nome recebe algum valor em código (.ts), essa alteração é feita na tag input
+        Logo, ela vai somente da direção .ts -> input, o contrário não ocorre
+
+Two Way Data Binding - bidirecional
+    As mudanças em .ts são atualizadas no html e vice versa
+        Então no exemplo acima, alterar o nome em código alteraria o html e inputar um nome no html
+        alteraria o código
+        Dados ficam sincronizados 
+
+    Utiliza parenteses+colchetes -> <tag [(ngModel)] = 'nome'
+    Bastante utilizado com formulários
+
+
+Rotas
+    Mapeamento entre a URL do componente "alvo" (a ser levado a) e a interface/componente atual
+    Exemplo: url /home sempre levar a home, /produto ao produto e yadda yadda
+    Chamar o caminho a essas urls quando determinada ação acontecer
+
+    Ex:
+     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+    |                                                               |
+    |                       COMPONENTE NAV                          |
+    |                                                               |
+    |                   Home   | Produto   | Usuário                |
+    |                                                               |
+    |                                                               |
+    |                        Router Outlet                          |
+    |          _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _        |
+    |        |                                               |      |
+    |        |                                               |      |
+    |        |                 Outros componentes            |      |
+    |        |                 a serem carregados            |      |           /home ou /produto ou /usuário
+    |        |_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|      |
+
+    Exemplo em código:
+        HTML:
+            //NavBar (Home | Produto | Usuário)
+            <a routerLink='/produtos'> Produtos </a>
+
+            //RouterOutlet
+            <mat-sidenav-content>
+            <router-outlet></router-outlet>
+            </mat-sidenav-content>
+
+        .ts do Rotas:
+            const routes:Routes = [
+                {
+                    path: 'produtos',
+                    component: ProdutosCrudComponent
+                },
+                {
+                    path: 'productos/create',
+                    component: ProdutoCreateComponent
+                }
+            ];
+
+        O angular vê qual routerLink ele quer das rotas e carrega o componente no router-outlet
+
+Pipes
+    São processamentos realizados em cima de variáveis - utiliza-se o double moustache {{ variável }}
+    ex:
+        <p>
+            O vencimento é
+            {{ produto.vencimento | date }}
+        </p>
+
+    O exemplo acima poderia ser somente produto.vencimento, no entanto, caso o formato recebido pelo BD não esteja correto,
+    podemos formatar o valor no mesmo pipe, dando a tipagem 'date' ao valor de 'produto.vencimento'
+    No caso, o  '|' é o pipe, por tal o nome - variável 'pipe' formato/tipo
+
+    Alguns pipes também recebem parâmetros:
+        <td mat-cell *matCellDef= 'let product':
+            {{ produto.preço | currency: 'BRL' }}
+        </td>
+
+        Ele formatará o preço na moeda Real - o tipo de moeda é o parâmetro
+
+    Também é possível o encadeamento de processos:
+        <p>
+            O vencimento É
+            {{ produto.vencimento | date: 'fullDate' | uppercase }}
+        </p>
+
+        Será formatado para o date completo (dd/mm/yy hh:mm:ss) em letras maiúsculas
+    
+OBSERVABLES (utiliza o framework rxjs dentro do angular - programação reativa)
+    Um código 'proativo' implica num código que está, o tempo inteiro, tentando fazer algum processamento
+    -tal fato implica no maior gasto de recursos que nem sempre é preciso de serem usados, nem todo código
+    precisa processar o tempo inteiro. Por tal, o padrão reativo - o código 'reage' a algum acontecimento/evento 
+    e, então, realiza o processamento
+
+    Programação Reativa - padrão de projeto
+        import { Observable } from 'rxjs' -> framework que inclusive existe para várias linguagens
+    
+    O padrão Observer (dentro do js) engloba callbacks, promises e observables - o padrão surgiu com o livro 'A gangue dos 4' (gang of four - gof)
+        Padrão orientado a evento
+            Subject - tem a capacidade de monitorar e detectar quando um evento acontecer
+            Observers - São os códigos que estão 'interessados' num determinado evento
+
+            Os observers poderiam ficar, cada um, monitorando o evento - mas se delegarem essa função ao subject, elas somente
+            precisam esperar o aviso/a notificação do mesmo
+            Cada Observer precisa se registrar no Subject "dizendo que está interessado no evento determinado"
+            Uma vez o Subject detectando que o evento ocorreu e tendo uma lista de todos os Observers interessados, ele notifica
+            todos os observers da lista - e, por fim, é acionada a função de cada Observer para ser processado o necessário para determinado evento
+
+            ex: Evento de compra
+                Tem um Observer para mandar e-mail ao usuário, outro para dar baixa no estoque, outro para notificar outros sistema para separar a mercadoria, yadda yadda
+                    O Subject notifica cada um desses Observers, quando uma compra é efetuada, de que houve uma compra
+
+        O js enxerga a reatividade a partir do momento que se tem como passar uma função para outra como parâmetro - callbacks
+            Evocar a função parâmetro quando x coisa acontecer (evento)
+            Pode ocorrer um aninhamento muito complexo de callbacks, não sendo o método preferível atual
+        O ECMA15 trouxe a Promise, uma outra forma de utilizar callbacks - com a possibilidade de encadear novas chamadas
+            É de melhor leitura o encadeamento de várias chamadas de promises, sem aninhamento
+            O problema: promises são usadas/executadas uma única vez, depois que termina a execução, não é possível reutiliza-la
+       
+        O Observables é a evolução da Promise, com o encadeamento fácil de funções e outros benefícios (rxjs)
+            É possível reusar um Observable
+            É possível lidar com uma Stream de Dados
+                ex: se necessário monitorar determinada votação - é possível criar um Observable que fique, de tempo em tempo,
+                consumindo essa informação do servidor. Com um Observable é possível absorver uma stream de dados sem ser necessário
+                ficar criando novos objetos para essas informações, já que o mesmo é reusável
+            Operadores (são funções)
+                É possível utilizar uma série de operadores junto dos Observables
+                Na promise temos o método .then(), enquanto no Observable podemos ter .map(), .filter() e outras funções que permitem
+                trabalhar com o retorno desses dados mais facilmente
+            Encapsula o padrão Observer
+    Quando estamos trabalhando com Observable/Promise/Callback, via de regra, estamos trabalhando com código assíncrono
+        Não há uma resposta imediata na chamada destes no código
+        Um exemplo comum são chamados ao backend da aplicação - é necessário esperar a resposta do mesmo
+    ex:
+        //Serviço com método para cadastrar no backend
+        //Retorna um Observable
+        criarNoBackend(produto:Produto): Observable<Produto> {
+            return this.http.post<Produto>(this.url, produto); //Retorna resposta do servidor, quando houver
+        }
+
+        //É possível registrar(subscribe) um observador na função criarNoBackend(), e chamar a função arrow registrada quando
+            o evento ocorrer
+        //O Observable retornado é o Subject que detecta quando chega a resposta do servidor e chama a função arrow registrada
+        //Então o evento aqui não é a chamada/evocação do criarNoBackend(), mas sim a resposta dessa execução (jeito mais fácil de entender)
+        //O Observable é gerado na execução dessa função, mas o mesmo somente é preenchido posteriormente, com a resposta
+        criarProduto():void{
+            this.criarNoBackend(this.produto).subscribe(()=>{
+                this.exibirMensagem('Salvo com sucesso');
+            })
+        }
+
+        
+
+
+Service
+    São classes que tem como objetivo principal organizar e compartilhar métodos e dados entre componentes
+        Métodos e dados, no caso, são códigos - afinal, Services são classes e classes compartilham código
+    Também podem ser utilizados dentro de diretivas - não é limitado a componentes
+        No fim, serve para separar responsabilidades: toda responsabilidade relacionada a mostrar algo visual na tela,
+        diz respeito ao componente; mas sempre que tivermos regras não relacionadas ao visual (ex: encapsular o acesso
+        à API/ao backend da aplicação) o ideal é separar as responsabilidades, colocando-as no Service.
+    Observação: o Angualr não força a criação de Services
+        É possível utilizar os Services para separar responsabilidades
+        Mas também é possível o uso para viabilizar comunicação entre componentes
+            ex: determinada informação tem de ser obtida e compartilhada entre componentes A e B - mas não é possível a passagem 
+            direta de dados entre estes, então utilizamos services
+    
+    'Outra' motivação para o uso de Services é para a reutilização de código, quando diferentes componentes tem a mesma lógica
+    para uso não visual - o service pode encapsular esses metódos, junto de outros não duplicados mas de não uso visual
+        Com isso geramos componentes mais 'limpos', mais focados no que devem fazer
+        Teremos Services responsáveis por métodos coerentes - serviços com cruds de produtos, outro com crud de usuários, por exemplo
+    
+    Criar service:
+        ng g s services/product // ng generate service pasta/nome
+
+    Gera:
+        //Decorator - Indica que essa classe será detectada pelo Angular e é possível injeta-la em outras classes
+        @Injectable({ 
+            providedIn: 'root', //Diz que existe um Injetor(Injectable) e ele é o injetor raíz da aplicação
+        })
+        
+        export class ProductService{
+            //... Lógica do Produto
+        }
+
+        //Somente existe um único injetor raíz na aplicação - uma vez definido que o ProductService será provido pelo root,
+        //significa que teremos somente uma única instância do ProductService em toda a aplicação (tal qual um singleton)
+            (Em outras linguagens teríamos classes ou funções para iniciar e gerenciar essa instância, mas aqui o Angular quem é responsável por tudo isso, já que o mesmo cria e e garante o retorno de instâncias)
+        //os dados podem ser compartilhados através dessa mesma isntância única
+
+Injeção de Dependência
+    É um padrão no qual a classe recebe as dependências de uma fonte externa ao invés de criar por conta própria
+        Sem injeção de dependências, normalmente a classe A precisa de classe B - a Classe A 'cria' a Classe B
+        Já com injeção, há inversão dessa lógica:
+            É um padrão no qual a classe recebe as dependências invés de criar por conta própria - a classe A recee a classe B
+            por meio de um construtor ou outro mecanismo
+
+    ex: 
+        //Utilização sem Injeção
+        Classe Carro   --> Classe Motor
+
+        class Carro {
+            motor:Motor;
+
+            constructor(){
+                this.motor = new Motor();
+            }
+        }
+
+        class Motor{
+
+        }
+
+        --A classe carro está muito dependente da classe motor: toda alteração na mesma reflete numa necessidade de alteração
+            do motor na classe carro
+
+        //Com Injeção
+        Classe Carro   <-- Classe Motor (motor passado ao carro)
+
+        class Carro {
+            motor:Motor;
+
+            constructor(motor:Motor){
+                //this.motor = new Motor(); //Não é mais possível instanciar o motor sem informar as cilindradas
+                this.motor = motor //Alguém externo já preencheu as necessidades do motor em outro momento e agora podemos passar o mesmo já preenchido, com qualquer necessidade existente do motor, para o construtor
+            }
+        }
+
+        class Motor{
+            cilindrada:number;
+
+            constructor(cilindrada:number){
+                this.cilindrada = cilindrada;
+            }
+
+        }
+
+        No caso do Angular, o Carro seria o componente e o Motor seria o service
+            Como o angular é responsável pela criação dos dois, o mesmo é capaz de prover essas dependências
+
+    Há um framework para injeção de dependências
+    Dizer que uma classe é Injectable faz a classe se injetável e obriga o angular a instancia-la
+        Ele mantém essa única instancia do serviço (singleton) no projeto
+        Quando criamos o objto/classe que precisa dessa dependência, o angular passa essa instância para seu construtor
+
+        ex:
+            Angular cria instância única de ProductService
+            ProductCreateComponente é inicializado e é instanciado no angular
+            Sua instância recebe o ProductService em seu construtor
+
+    O 'root' chamado em providedIn é, na verdade, nosso AppModule - é um root Injector
+    No lugar de 'root', podemos fazer indicação a outro módulo (exemplo: um módulo para autenticação com serviços para essa finalidade)
+            As aspas somente são usadas ao root, outros móduos devem ser importados e referenciados por seus nomes
+    
+    Services são singletons dentro do escopo de um injector
+    Um injector é dividido em:
+        ModuleInjector:
+            ex: 'root'
+            Decorators usados para identificar um ModuleInjector
+                @NgModule
+                @Injectable - pode passar tanto root quando um módulo importado em providedIn
+            Dentro do escopo de meu módulo eu terei somente uma única instância de determinado serviço 
+
+        ElementInjector:
+            Identifcado ao ser usado dentro de 
+                @Directive
+                @Component
+            Pode-se definir, a partir da propriedade 'providers', alguns serviços que queiramos dentro do componente ou diretiva 
+            Ou seja: uma instância própria de determinado Service dentro do componente/diretiva, invés de uma única (uma dedicada)
+        São maneiras de definir o escopo dum service, em aplicações mais complexas e com diferentes módulos
+
+        //angular.io/guide/hierarchical-dependecy-injection para mais infos
+
+
+//
+Classe de modelo/model
+    Como ts é uma linguagem tipada, quando vamos interagir com o back e retornar dados, esperamos que 
+    esses dados sejam de determinados tipos para facilidade no manejo
+    Criar arquivo em pasta de componente, mas em separado das pastas de view
+    nome.model.ts
+        exporte interface NomeClasse{
+            id?:number -> ?indica que é atributo opcional (não utilizamos id para criar obj mas sim para pegarmos obj, então temos uma situação que o mesmo nao é obrgatório)
+            nombe:string
+            etc
+        }
+    Interface é um tipo de recurso disponível somente em .ts
+
+O Angular permite requisições HTTP-Client a partir do próprio Angular, já pegando as informações vindas do back e este sendo o responsável pelo bd, não o angular
+
+

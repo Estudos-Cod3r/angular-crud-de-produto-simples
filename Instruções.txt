@@ -1,0 +1,96 @@
+pasta backend -> npm init -y //criar package.json
+O backend vai ser simples, somente um server json
+npm i json-server
+    Lê um arquivo json e cria uma api baseada no mesmo - no caso, o db.json
+
+db.json - products: [{dados obj}] - o products será a endpoint, então localhost:3001/products
+products/id para put,patch,delete etc
+
+package.json - start:
+json-server --watch db.json --port  3001// P/ o json-server ficar assistindo o db.json (verificar mudanças e afins) e a porta do mesmo
+
+instalar o angular cli (através duma dependencia do node) e vai criar a possibilidade do comando ng
+npm i -g @angular/cli
+
+ng enter - help de comandos
+
+ng new NomeApp(frontEnd) - cria novo projeto com o prefixo app - possível retirar com --prefix
+--minimal retira alguns arquivos adicionais, como para testes
+flags para definir qual diretório, também
+
+Pergunta se quer rotas e qual o tipo de estilo 
+Dentro da pasta do projeto, npm start compila o projeto dentro da porta 4200 para uso
+ng serve para rodar
+
+lembrando
+    frontend - porta 4200
+    backend - porta 3001
+
+Arquivos de config foram criados para o node (package.json) e angular (angular.json)
+angular.json: "inlineTemplate" e "inlineStyle": false
+    Com false, os componentes serão separados em diferentes arquivos (html, css e ts) invés dum único arquivo com todos
+    Na flag --minimal o inline vem true por default, mas no setup normal, não
+    O html e css acabam sendo injetados como strings (o que impede snippets)
+    --Criar html e css do app.component.ts
+
+src é onde fica nosso app
+    A "porta de entrada" do app é o main.ts
+        Nele é carregado o AppModule
+
+assets é onde ficam os recursos externos, como imgs e afins
+
+environment é onde podemos definir nossas variáveis de ambientes e afins
+    environment.ts é utilizado no ambiente de desenvolvimento
+    environment.prod.ts é utilizado na produção
+
+index.html - SPA tem "apenas" uma página que carrega outros conteúdos
+    -página inicial
+    -carrega o componente raíz (<app-root></app-root>) -- é o app.component.ts (na aba selector é possível mudar a tag personalizada)
+    
+com o hotreload desligado
+    ng add @angular/material - para adicionar material ao mesmo (padrão de layoutes do google)
+    selecionar temas pré-montados ou próprio
+    aplicar fontes de maneira global (para todo o projeto)
+    """""" com animações do materials
+    Se --minimal (sem testes) o materials não vai atualizar o mesmo
+
+ng generate componente components/template/header ou ng g c /component/template/header
+                        diretório/nomeComponente
+    Cria oas arquivos necessários dos componentes e atualiza as importações do app.module 
+
+Módulos do materials importados em appModule
+
+
+/components terão os componentes reutilizaveis
+/views terão as telas únicas
+
+Materials
+    -Utilização de Schematics
+        ng generate @angular/material :nome-schematic <nome-componente>
+            Gera componente a partir dum schematic para adiantar
+        
+        address-form - form fields, radio controls e botões
+        navigation - toolbar com o nome do app e uma sidenav responsiva baseada nos breakpoints (mediaquerys) do material
+        dashboard - listagem em grid dinâmica de cards pré-configurados utilizando material
+        table - cria uma tabela dinâmica pré-configurada com uma fonte de dados e paginação
+        tree - Usa o material <mat-tree> para visualizar uma estrutura de pastas aninhadas
+
+        ex:
+            ng generate @angular/material:table <nome do componente>
+            ou
+            ng generate @angular/material:table components/product/nome-component-produto
+
+            Será criado o componente e uma datasource
+            Será necessário importar alguns modulos no appModule (normalmente ele importa automaticamente)
+
+            As características de paginação e ordenação serão atribuídas pelo component.ts, invés do datasource.ts,
+            utilizando o decorator @ViewChild(tipoASerSelecionado)
+                "Um filho da minha view/template"
+                    -O tipo a ser selecionado dentro da nossa view
+                        Ele percorre a view, pega o primeiro elemento/ocorrência e joga na variável do tipo selecionado
+                Ou seja, o Angular quem fará
+
+
+            ngOnInit - na inicialização (pré-renderização)
+            ngAfterViewInit - depois da inicialização e renderização dos elementos
+            A função 'connect()' (dentro do datasource) no componente da tabela é quem faz a ligação do componente com o datasource.ts

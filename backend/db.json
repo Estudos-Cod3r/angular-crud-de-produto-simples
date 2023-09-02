@@ -1,0 +1,39 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Caneta Bic Azul",
+      "price": "5.60"
+    },
+    {
+      "id": 2,
+      "name": "Macbook Pro",
+      "price": 12599
+    },
+    {
+      "id": 3,
+      "name": "Samsung S20+",
+      "price": 2500.69
+    },
+    {
+      "name": "Geladeira",
+      "price": " 1920.24",
+      "id": 4
+    },
+    {
+      "name": "Frigideira Elétrica",
+      "price": "850.00",
+      "id": 5
+    },
+    {
+      "name": "Monitor 22pl",
+      "price": "1235.45",
+      "id": 6
+    },
+    {
+      "name": "AirFryer",
+      "price": "756.20",
+      "id": 7
+    }
+  ]
+}
