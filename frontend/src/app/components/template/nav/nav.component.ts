@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { HeaderService } from '../header/header.service';
+
 
 @Component({
   selector: 'app-nav',
@@ -6,5 +8,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./nav.component.css']
 })
 export class NavComponent {
+
+  
 
 }
