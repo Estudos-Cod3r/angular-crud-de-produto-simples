@@ -8,7 +8,7 @@ import { map, catchError} from 'rxjs/operators'
 @Injectable({
   providedIn: 'root'
 })
-export class ProductServiceService {
+export class ProductService {
   baseUrl = 'http://localhost:3001/products';
 
   constructor(private snackBar:MatSnackBar, private http: HttpClient) { }
