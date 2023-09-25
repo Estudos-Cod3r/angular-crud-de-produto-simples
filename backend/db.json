@@ -34,6 +34,16 @@
       "name": "AirFryer",
       "price": "756.20",
       "id": 7
+    },
+    {
+      "name": "Teste",
+      "price": null,
+      "id": 8
+    },
+    {
+      "name": "Teste",
+      "price": "1253.45",
+      "id": 9
     }
   ]
 }

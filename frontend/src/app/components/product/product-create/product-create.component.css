@@ -1,12 +1,18 @@
 form{
     display: flex;
     flex-direction: column;
+    padding: 8px 0;
 }
+
 
 button{
     margin:20px 15px 0px 0px;
 }
 
-.product{
-    padding:16px;
+.container{
+    padding: 16px;
+}
+
+.button-container{
+    display: flex;
 }
