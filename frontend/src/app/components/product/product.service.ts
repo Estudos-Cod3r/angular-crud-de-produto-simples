@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http'
-import {MatSnackBar} from '@angular/material/snack-bar'
+import { HttpClient } from '@angular/common/http'
+import { MatSnackBar } from '@angular/material/snack-bar'
 import { Product } from './product.model';
 import { Observable, EMPTY } from 'rxjs'
 import { map, catchError} from 'rxjs/operators'
