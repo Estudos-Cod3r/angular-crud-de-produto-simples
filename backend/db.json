@@ -36,14 +36,9 @@
       "id": 7
     },
     {
-      "name": "Teste",
-      "price": null,
+      "name": "Aaaa",
+      "price": "100.00",
       "id": 8
-    },
-    {
-      "name": "Teste",
-      "price": "1253.45",
-      "id": 9
     }
   ]
 }
