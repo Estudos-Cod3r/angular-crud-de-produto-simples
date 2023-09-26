@@ -9,6 +9,28 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-
 
 
 
+.product-container{
+    &.container{
+        padding: 16px;
+    }
+    form{
+        display: flex;
+        flex-direction: column;
+        padding: 8px 0;
+    }
+    
+    
+    button{
+        margin:20px 15px 0px 0px;
+    }
+    
+    
+    .button-container{
+        display: flex;
+    }
+}
+
+
 .mat-mdc-snack-bar-container {
     &.msg-error { /*É possível de utilizar somente a classe msg-error desta forma, mas preferi essa organização*/
       --mdc-snackbar-container-color: #e35e6b;

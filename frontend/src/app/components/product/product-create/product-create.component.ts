@@ -21,8 +21,8 @@ export class ProductCreateComponent {
 
   createProduct():void{
     this.productService.create(this.product).subscribe(()=>{
-      this.productService.showMessage('Produto criado!')
-      this.router.navigate(['/products'])
+      this.productService.showMessage('Produto criado!');
+      this.router.navigate(['/products']);
     });
   }
 
