@@ -27,7 +27,7 @@ export class ProductService {
     return EMPTY;
   }
 
-  read():Observable<Product>{
+  read():Observable<Product[]>{
     return this.http.get<Product>(this.baseUrl).pipe(
       map(obj => obj),
       catchError(e => this.errorHandler(e))
