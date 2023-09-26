@@ -14,15 +14,11 @@ export class ProductService {
   constructor(private snackBar:MatSnackBar, private http: HttpClient) { }
 
   showMessage(msg:string, isError:boolean = false): void{
-    //this.snackBar.open(msg, 'X',{
-    //  duration:3000,
-    //  horizontalPosition:'right',
-    //  verticalPosition:'top',
-    //  panelClass: isError ? ['msg-error'] : ['msg-success'],
-    //});
-    console.log("mensagem")
-    this.snackBar.open(msg,'X',{
-      panelClass:["msg-success"]
+    this.snackBar.open(msg, 'X',{
+      //duration:3000,
+      horizontalPosition:'right',
+      verticalPosition:'top',
+      panelClass: isError ? ['msg-error'] : ['msg-success'],
     });
   }
 

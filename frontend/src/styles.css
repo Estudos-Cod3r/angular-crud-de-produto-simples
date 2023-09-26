@@ -7,15 +7,21 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-
     vertical-align: middle;
 }
 
-.msg-success{
-    background-color: #28a745;
-    color: #FFF;
-}
-.msg-error{
-    background-color: #e35e6b;
-    color: #FFF;
-}
 
-.sucesso{
-    background-color: yellow;
-}
+
+.mat-mdc-snack-bar-container {
+    &.msg-error { /*É possível de utilizar somente a classe msg-error desta forma, mas preferi essa organização*/
+      --mdc-snackbar-container-color: #e35e6b;
+      --mdc-snackbar-supporting-text-color: #fff;
+    }
+    &.msg-success{
+        --mdc-snackbar-container-color: #28a745;
+        --mdc-snackbar-supporting-text-color: #fff;
+    }
+  }
+
+  /* Versão corrigida utilizada no curso da cod3rs, sem exemplo ou menção a cor da fonte
+.msg-error .mdc-snackbar__surface::before{
+    background-color: #d97f88;
+    z-index:-1;
+}*/
